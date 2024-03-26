@@ -26,9 +26,9 @@ class MainActivity : AppCompatActivity() {
     lateinit var storageUtil: StorageUtil
 
     private lateinit var adapter: ArrayAdapter<String>
-    val arrayOfGifts = intArrayOf(R.drawable.minuman, R.drawable.icecream, R.drawable.pizza)
+    val arrayOfGifts = intArrayOf(R.drawable.minuman,R.drawable.minuman2, R.drawable.icecream, R.drawable.pizza)
     val arrayOfTempUser = intArrayOf(R.drawable.avatar1, R.drawable.avatar2, R.drawable.avatar3, R.drawable.avatar4)
-    val arrayOfTempCard = intArrayOf(R.drawable._1h, R.drawable._2c, R.drawable._3c)
+    val arrayOfTempCard = intArrayOf(R.drawable._1h, R.drawable._2c, R.drawable._3c, R.drawable._4c, R.drawable._5c)
 
 
 
@@ -108,17 +108,42 @@ class MainActivity : AppCompatActivity() {
                     }
                     // ini yg jadi component disebelah user (kartu-kartunya)
                     else if ((i == 0 && j == 2 + 1) || (i == 0 && j == 4 + 1) || (i == 0 && j == 6 + 1)) {
-                        val imageView = ImageView(this).apply {
-                            val params = GridLayout.LayoutParams().apply {
+
+                        val parentLayout = FrameLayout(this).apply {
+                            layoutParams = GridLayout.LayoutParams().apply {
                                 width = cellWidth
                                 height = cellHeight
-                                rowSpec = GridLayout.spec(i)
-                                columnSpec = GridLayout.spec(j)
                             }
-                            layoutParams = params
-                            setImageResource(arrayOfTempCard[(0..2).random()])
                         }
-                        chessboardLayout.addView(imageView) // Add each ImageView to the GridLayout
+
+                        val firstCard = ImageView(this).apply {
+                            setImageResource(arrayOfTempCard[(0..3).random()])
+                            layoutParams = FrameLayout.LayoutParams(
+                                FrameLayout.LayoutParams.MATCH_PARENT,
+                                FrameLayout.LayoutParams.MATCH_PARENT
+                            )
+                        }
+                        val secondCard = ImageView(this).apply {
+                            setImageResource(arrayOfTempCard[(0..2).random()])
+                            val imageWidth = cellWidth / 2 + cellWidth / 4
+                            val leftMargin = (cellWidth) / 4
+
+                            // Create FrameLayout.LayoutParams with initial values
+                            var params = FrameLayout.LayoutParams(
+                                imageWidth,
+                                cellHeight
+
+                            )
+                            // Modify the params
+                            params.gravity = Gravity.BOTTOM or Gravity.END  // sudut bawah-kanan
+                            params.leftMargin = leftMargin
+
+                            layoutParams = params
+                        }
+                        parentLayout.addView(firstCard)
+                        parentLayout.addView(secondCard)
+
+                        chessboardLayout.addView(parentLayout)
                     }
 
 
