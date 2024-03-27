@@ -196,17 +196,40 @@ class MainActivity : AppCompatActivity() {
 
                     // ini yg jadi component disebelah user (kartu-kartunya)
                     else if ((i == 3 && j == 2 + 1) || (i == 3 && j == 4 + 1) || (i == 3 && j == 6 + 1)) {
-                        val imageView = ImageView(this).apply {
-                            val params = GridLayout.LayoutParams().apply {
+                        val parentLayout = FrameLayout(this).apply {
+                            layoutParams = GridLayout.LayoutParams().apply {
                                 width = cellWidth
                                 height = cellHeight
-                                rowSpec = GridLayout.spec(i)
-                                columnSpec = GridLayout.spec(j)
                             }
-                            layoutParams = params
-                            setImageResource(arrayOfTempCard[(0..2).random()])
                         }
-                        chessboardLayout.addView(imageView) // Add each ImageView to the GridLayout
+                        // kartu kiri
+                        val firstCard = ImageView(this).apply {
+                            setImageResource(arrayOfTempCard[(0..3).random()])
+                            layoutParams = FrameLayout.LayoutParams(
+                                FrameLayout.LayoutParams.MATCH_PARENT,
+                                FrameLayout.LayoutParams.MATCH_PARENT
+                            )
+                        }
+                        // kartu kanan
+                        val secondCard = ImageView(this).apply {
+                            setImageResource(arrayOfTempCard[(0..2).random()])
+                            val imageWidth = cellWidth / 2 + cellWidth / 4
+                            val leftMargin = (cellWidth) / 4
+
+                           // ini jadi wrapper untuk 2 kartu . Dimensi mesti match ke cell gridlayout
+                            var params = FrameLayout.LayoutParams(
+                                imageWidth,
+                                cellHeight
+                            )
+                            params.gravity = Gravity.BOTTOM or Gravity.END  // sudut bawah-kanan
+                            params.leftMargin = leftMargin
+
+                            layoutParams = params
+                        }
+                        parentLayout.addView(firstCard)
+                        parentLayout.addView(secondCard)
+
+                        chessboardLayout.addView(parentLayout)
                     }
 
                     else {
@@ -219,7 +242,6 @@ class MainActivity : AppCompatActivity() {
                                 columnSpec = GridLayout.spec(j)
                             }
                             layoutParams = params
-//                            setImageResource(R.drawable.notebook)
                         }
                         chessboardLayout.addView(imageView) // Add each ImageView to the GridLayout
                     }
