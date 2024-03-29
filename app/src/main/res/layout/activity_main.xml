@@ -6,14 +6,28 @@
     android:layout_height="match_parent"
     android:orientation="horizontal"
     tools:context="com.fevly.kasuariboard.MainActivity">
-
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+      >
     <Button
+        android:id="@+id/connect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="Shop"
         android:text="Shop"
         android:drawableTop="@drawable/bagofmoney"
         app:tint="#ff0000" />
+    <Button
+        android:id="@+id/shop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="connect"
+        android:text="Connect"
+        android:drawableTop="@drawable/network"
+        app:tint="#ff0000" />
+    </LinearLayout>
     <!-- activity_main.xml -->
     <GridLayout
         android:id="@+id/chessboard"

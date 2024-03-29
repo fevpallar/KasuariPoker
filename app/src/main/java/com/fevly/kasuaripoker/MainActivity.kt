@@ -6,7 +6,9 @@ package com.fevly.kasuaripoker
 
 import android.os.Bundle
 import android.view.Gravity
+import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.GridLayout
@@ -15,15 +17,18 @@ import android.widget.ListView
 import androidx.appcompat.app.AppCompatActivity
 import com.fevly.kasuaripoker.storage.Permission
 import com.fevly.kasuaripoker.storage.StorageUtil
+import com.fevly.kasuariprogroom.transmission.KasuariNetworkChannelManager
 
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var editText: EditText
     private lateinit var listView: ListView
+    private lateinit var connect: Button
     lateinit var chessboardLayout: GridLayout
     lateinit var permission: Permission
     lateinit var storageUtil: StorageUtil
+    lateinit var kasuariNetworkChannelManager: KasuariNetworkChannelManager
 
     private lateinit var adapter: ArrayAdapter<String>
     val arrayOfGifts = intArrayOf(R.drawable.minuman,R.drawable.minuman2, R.drawable.icecream, R.drawable.pizza)
@@ -35,10 +40,18 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        kasuariNetworkChannelManager = KasuariNetworkChannelManager(this)
         chessboardLayout = findViewById<GridLayout>(R.id.chessboard)
+        connect = findViewById<Button>(R.id.connect)
 //        chessboardLayout.setBackgroundColor(Color.RED)
         drawLayoutAndBoard()
+
+        connect.setOnClickListener(
+            View.OnClickListener {
+                kasuariNetworkChannelManager.exposeServicePleaseDoItNowKasuari("sampleservice",9999)
+            }
+        )
+
 
 
     }
