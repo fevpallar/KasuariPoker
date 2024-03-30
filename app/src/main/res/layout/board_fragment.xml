@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+
+    tools:context="com.fevly.kasuariboard.MainActivity">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:alpha="0.9"
+        >
+        <Button
+            android:id="@+id/connect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="Shop"
+            android:text="Shop"
+            android:drawableTop="@drawable/bagofmoney"
+            app:tint="#ff0000" />
+        <Button
+            android:id="@+id/shop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="connect"
+            android:text="Connect"
+            android:drawableTop="@drawable/network"
+            app:tint="#ff0000" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
+        android:alpha="0.95"
+        >
+    <GridLayout
+        android:id="@+id/chessboard"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/boardpoker"
+        android:scaleType="centerCrop"
+        android:columnCount="9"
+        android:rowCount="4"
+
+        android:scrollbars="vertical">
+    </GridLayout>
+</LinearLayout>
+
+
+
+</LinearLayout>
