@@ -1,11 +1,12 @@
-package kususkasuari
+package com.fevly.kasuaripoker.game
+
+import com.fevly.kasuaripoker.depend.KasuariServerEngine
+
+
 /*==========================================
 Author : Fevly Pallar
 contact : fevly.pallar@gmail.com
 =========================================*/
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import java.net.Socket
 
 
 // note 30032023 : sluruh bagian disini coupled sama thread server (jadi tdk bisa client disini)

@@ -3,6 +3,8 @@ package kususkasuari
 Author : Fevly Pallar
 contact : fevly.pallar@gmail.com
 =========================================*/
+import com.fevly.kasuaripoker.depend.KasuariClientEngine
+import com.fevly.kasuaripoker.game.GameEngine
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.io.PrintWriter
