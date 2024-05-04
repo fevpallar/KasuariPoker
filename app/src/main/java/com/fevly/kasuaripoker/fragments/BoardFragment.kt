@@ -5,65 +5,39 @@ contact : fevly.pallar@gmail.com
 package com.fevly.kasuaripoker.fragments
 
 
-
 import android.graphics.Color
+import android.opengl.GLSurfaceView
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Button
-import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.GridLayout
 import android.widget.ImageView
-import android.widget.ListView
-import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.viewpager.widget.ViewPager
 import com.fevly.kasuaripoker.R
+import com.fevly.kasuaripoker.animation.FireworkRenderer
+
 
 import com.fevly.kasuaripoker.storage.Permission
 import com.fevly.kasuaripoker.storage.StorageUtil
+import com.fevly.kasuaripoker.surface.CustomeSurfaceBuilder
 import com.fevly.kasuariprogroom.transmission.KasuariNetworkChannelManager
-import com.google.android.material.tabs.TabLayout
 
 
-class BoardFragment : Fragment() {
-    /*  lateinit var tabLayout: TabLayout
-      lateinit var viewPager: ViewPager
-      var currentPiece = ""
-      var currentRow = -1
-      var currentCol = -1
+class BoardFragment() : Fragment() {
+    lateinit var glSurfaceView: GLSurfaceView
 
-      var colorToMoveFlag=0; // 0 -> putih (white), 1 -> hitam (bleeki..)
 
-      lateinit var board: Array<Array<String>>
-
-      lateinit var chessboardLayout: GridLayout
-
-      lateinit var trackedClickedPiece: MutableSet<Pair<Int, Int>>
-      lateinit var imageViewArray: Array<Array<ImageView>>
-
-      lateinit var pm: PieceMoves
-
-      lateinit var latestBoard: Array<Array<String>>
-      lateinit var snapshotMoves: MutableList<Array<Array<String>>>
-
-      var labelHuruf = arrayOf("a", "b", "c", "d", "e", "f", "g", "h")
-      var labelAngka = arrayOf("1", "2", "3", "4", "5", "6", "7", "8")
-  */
-
-    private lateinit var editText: EditText
-    private lateinit var listView: ListView
     private lateinit var connect: Button
     lateinit var chessboardLayout: GridLayout
     lateinit var permission: Permission
     lateinit var storageUtil: StorageUtil
     lateinit var kasuariNetworkChannelManager: KasuariNetworkChannelManager
+    lateinit var customeSurfaceBuilder: CustomeSurfaceBuilder
 
     private lateinit var adapter: ArrayAdapter<String>
     val arrayOfGifts =
@@ -76,6 +50,13 @@ class BoardFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        glSurfaceView = GLSurfaceView(requireContext())
+        glSurfaceView.setEGLContextClientVersion(2) // GLES 2.0
+        val fireworkRenderer =
+            FireworkRenderer(requireContext())
+        glSurfaceView.setRenderer(fireworkRenderer)
+        glSurfaceView.renderMode = GLSurfaceView.FOCUSABLES_TOUCH_MODE
     }
 
     override fun onCreateView(
@@ -86,7 +67,11 @@ class BoardFragment : Fragment() {
         kasuariNetworkChannelManager = KasuariNetworkChannelManager(requireContext())
         chessboardLayout = view.findViewById<GridLayout>(R.id.chessboard)
         connect = view.findViewById<Button>(R.id.connect)
-//        chessboardLayout.setBackgroundColor(Color.RED)
+
+
+        customeSurfaceBuilder = CustomeSurfaceBuilder(requireContext())
+
+
         drawLayoutAndBoard()
 
         connect.setOnClickListener(
@@ -97,6 +82,7 @@ class BoardFragment : Fragment() {
                 )
             }
         )
+
 
 
 
@@ -118,14 +104,94 @@ class BoardFragment : Fragment() {
             for (i in 0 until 4) {
                 for (j in 0 until 9) {
 
+                    if ((i == 1 && j == 2) || (i == 1 && j == 6)) {
+
+                        val parentLayout = FrameLayout(requireContext()).apply {
+
+                            /*=========================================
+                            Note 04052024
+
+                            Adjust span ke row atau col mesti paksa juga
+                            dengan  mengubah size cell =  size cell * jumlah span yg dinginkan.
+
+                            mis. span row 1 dan 2 --> maka lebar(maupun tinggi) cell mesti juga dikali 2 ,
+                            otherwise tdk ada effek di layout .
+                            ========================================= */
+
+                            if (j==2) {
+                                layoutParams = GridLayout.LayoutParams().apply {
+                                    width = 2 * cellWidth
+                                    height =
+                                        2 * cellHeight - cellHeight / 8
+                                    rowSpec = GridLayout.spec(GridLayout.UNDEFINED, 2)  // Sp
+                                    columnSpec = GridLayout.spec(2, 2)
+
+                                }
+
+                            }
+
+                            if (j==6){
+                                layoutParams = GridLayout.LayoutParams().apply {
+                                    width = 2* cellWidth
+                                    height =
+                                        2 * cellHeight - cellHeight / 8
+                                    rowSpec = GridLayout.spec(GridLayout.UNDEFINED, 2)  // Sp
+                                  columnSpec = GridLayout.spec(6, 2)
+
+                                }
+                            }
+
+
+                            setBackgroundColor(Color.TRANSPARENT)
+                        }
+                        if (j==2)
+                        parentLayout.addView(    customeSurfaceBuilder.setAndGetGlSurfaceView(0))
+                        if (j==6)
+                            parentLayout.addView(    customeSurfaceBuilder.setAndGetGlSurfaceView(1))
+                        chessboardLayout.addView(parentLayout)
+                    }
+
+                    if ((i == 3 && j == 8) ) {
+
+                        val parentLayout = FrameLayout(requireContext()).apply {
+
+                            /*=========================================
+                            Note 04052024
+
+                            Adjust span ke row atau col mesti paksa juga
+                            dengan  mengubah size cell =  size cell * jumlah span yg dinginkan.
+
+                            mis. span row 1 dan 2 --> maka lebar(maupun tinggi) cell mesti juga dikali 2 ,
+                            otherwise tdk ada effek di layout .
+                            ========================================= */
+
+                                layoutParams = GridLayout.LayoutParams().apply {
+                                    width = 4* cellWidth
+                                    height =
+                                        4* cellHeight - cellHeight / 8
+                                    rowSpec = GridLayout.spec(GridLayout.UNDEFINED, 4)  // Sp
+//                                    columnSpec = GridLayout.spec(7, 1)
+
+                                }
+
+
+                            setBackgroundColor(Color.TRANSPARENT)
+                        }
+
+                        parentLayout.addView(    customeSurfaceBuilder.setAndGetGlSurfaceView(1))
+                        chessboardLayout.addView(parentLayout)
+                    }
+
 
                     if ((i == 0 && j == 2) || (i == 0 && j == 4) || (i == 0 && j == 6)) {
 
                         val parentLayout = FrameLayout(requireContext()).apply {
                             layoutParams = GridLayout.LayoutParams().apply {
                                 width = cellWidth
-                                height = cellHeight - cellHeight/8
+                                height = cellHeight - cellHeight / 8
+
                             }
+
                         }
 
                         /*====================================================
@@ -139,7 +205,10 @@ class BoardFragment : Fragment() {
                                 FrameLayout.LayoutParams.MATCH_PARENT,
                                 FrameLayout.LayoutParams.MATCH_PARENT
                             )
-                        }/*====================================================
+                        }
+
+
+                        /*====================================================
                             Note: 26/03/2024
                            sedangkan Gambar pernak-pernik game(botol,pizza,dll) punya size yg minor
                          relative ke Foto player
@@ -164,6 +233,9 @@ class BoardFragment : Fragment() {
                         parentLayout.addView(fotoUser)
                         parentLayout.addView(fotoPernakPernik)
 
+
+
+
                         chessboardLayout.addView(parentLayout)
                     }
                     // ini yg jadi component disebelah user (kartu-kartunya)
@@ -172,7 +244,7 @@ class BoardFragment : Fragment() {
                         val parentLayout = FrameLayout(requireContext()).apply {
                             layoutParams = GridLayout.LayoutParams().apply {
                                 width = cellWidth
-                                    height =cellHeight - cellHeight/8
+                                height = cellHeight - cellHeight / 8
                             }
                         }
 
@@ -182,7 +254,7 @@ class BoardFragment : Fragment() {
                                 FrameLayout.LayoutParams.MATCH_PARENT,
                                 FrameLayout.LayoutParams.MATCH_PARENT
                             )
-                            rotation=-20f
+                            rotation = -20f
                         }
                         val secondCard = ImageView(requireContext()).apply {
                             setImageResource(arrayOfTempCard[(0..2).random()])
@@ -205,15 +277,11 @@ class BoardFragment : Fragment() {
                         parentLayout.addView(secondCard)
 
                         chessboardLayout.addView(parentLayout)
-                    }
-
-
-
-                    else if ((i == 3 && j == 2) || (i == 3 && j == 4) || (i == 3 && j == 6)) {
+                    } else if ((i == 3 && j == 2) || (i == 3 && j == 4) || (i == 3 && j == 6)) {
                         val parentLayout = FrameLayout(requireContext()).apply {
                             layoutParams = GridLayout.LayoutParams().apply {
                                 width = cellWidth
-                                height =cellHeight - cellHeight/8
+                                height = cellHeight - cellHeight / 8
 //                                rowSpec = GridLayout.spec(GridLayout.UNDEFINED, 0.5f) // ini gak ngefek
                             }
                         }
@@ -238,15 +306,18 @@ class BoardFragment : Fragment() {
                     * ======================================================*/
                         val fotoPernakPernik = ImageView(requireContext()).apply {
                             setImageResource(arrayOfGifts[(0..2).random()])
-                            val imageWidth = cellWidth / 2 + cellWidth / 4  // Width of the ImageView
-                            val leftMargin = (cellWidth) / 4  // Calculate left margin to center the ImageView
+                            val imageWidth =
+                                cellWidth / 2 + cellWidth / 4  // Width of the ImageView
+                            val leftMargin =
+                                (cellWidth) / 4  // Calculate left margin to center the ImageView
 
                             var params = FrameLayout.LayoutParams(
                                 imageWidth,
                                 cellWidth / 2 - cellWidth / 16
                             )
 
-                            params.gravity = Gravity.BOTTOM or Gravity.END  // Set gravity to bottom-right corner
+                            params.gravity =
+                                Gravity.BOTTOM or Gravity.END  // Set gravity to bottom-right corner
                             params.leftMargin = leftMargin
 
                             layoutParams = params
@@ -263,7 +334,7 @@ class BoardFragment : Fragment() {
                         val parentLayout = FrameLayout(requireContext()).apply {
                             layoutParams = GridLayout.LayoutParams().apply {
                                 width = cellWidth
-                                height =cellHeight - cellHeight/8
+                                height = cellHeight - cellHeight / 8
                             }
                         }
                         // kartu kiri
@@ -273,7 +344,7 @@ class BoardFragment : Fragment() {
                                 FrameLayout.LayoutParams.MATCH_PARENT,
                                 FrameLayout.LayoutParams.MATCH_PARENT
                             )
-                            rotation=-20f
+                            rotation = -20f
                         }
                         // kartu kanan
                         val secondCard = ImageView(requireContext()).apply {
@@ -295,12 +366,10 @@ class BoardFragment : Fragment() {
                         parentLayout.addView(secondCard)
 
                         chessboardLayout.addView(parentLayout)
-                    }
-
-                    else {
+                    } else {
 
                         val imageView = ImageView(requireContext()).apply {
-//                            setImageResource(R.drawable.notebook)
+//                                 setImageResource(R.drawable.notebook)
                             val params = GridLayout.LayoutParams().apply {
                                 width = cellWidth
                                 height = cellHeight
@@ -318,6 +387,19 @@ class BoardFragment : Fragment() {
 
         }
     }
+
+//     override fun onPause() {
+//            super.onPause()
+//
+//            glSurfaceView.onPause()
+//
+//        }
+//
+//        override fun onResume() {
+//            super.onResume()
+//            glSurfaceView.onResume()
+//
+//        }
 
 
 }

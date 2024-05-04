@@ -4,6 +4,7 @@ contact : fevly.pallar@gmail.com
 =========================================*/
 package com.fevly.kasuaripoker
 
+import android.opengl.GLSurfaceView
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,8 +21,10 @@ import com.google.android.material.tabs.TabLayout
 
 class MainActivity : AppCompatActivity() {
 
+
     lateinit var tabLayout: TabLayout
     lateinit var viewPager: ViewPager
+    lateinit var glSurfaceView : GLSurfaceView
     internal class ViewPagerAdapter(manager: FragmentManager?) :
         FragmentPagerAdapter(manager!!) {
         private val mFragmentList: MutableList<Fragment> = ArrayList<Fragment>()
@@ -68,6 +71,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+
+
         val actionBar: ActionBar? = supportActionBar
         actionBar?.hide()
 
@@ -79,7 +85,11 @@ class MainActivity : AppCompatActivity() {
         createTabIcons()
 
 
+
+
+
     }
+
 
 
 }
